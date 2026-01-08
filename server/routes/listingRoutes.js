@@ -1,6 +1,8 @@
+
 const express = require("express");
 // Custom imports
 const authController = require("../controllers/authController");
+const { requireRole } = require("../controllers/authController");
 const listingController = require("../controllers/listingController");
 
 const router = express.Router();

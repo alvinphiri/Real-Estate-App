@@ -28,6 +28,16 @@ const userSchema = new mongoose.Schema(
       default:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5jifLXKb2qo_5aXh54USNlvxI34oPpG3zTw&usqp=CAU",
     },
+    role: {
+      type: String,
+      enum: ["tenant", "landlord"],
+      default: "tenant",
+    },
+    
+    premiumStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

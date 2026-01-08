@@ -23,14 +23,28 @@ const listingSchema = new mongoose.Schema(
       },
       required: [true, "Please provide your phone number"],
     },
-    regularPrice: {
+    monthlyRent: {
       type: Number,
-      required: [true, "Please provide a regular price"],
+      required: [true, "Please provide monthly rent"],
     },
-    discountedPrice: {
-      type: Number,
-      required: [true, "Please provide a discounted price"],
+    
+    location: {
+      type: String,
+      required: [true, "Please provide location / area"],
     },
+    amenities: {
+      solar: { type: Boolean, default: false },
+      borehole: { type: Boolean, default: false },
+      security: { type: Boolean, default: false },
+      parking: { type: Boolean, default: false },
+      internet: { type: Boolean, default: false },
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+    
     bathrooms: {
       type: Number,
       required: [true, "Please provide the number of bathrooms"],

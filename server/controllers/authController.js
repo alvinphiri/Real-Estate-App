@@ -180,3 +180,14 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = freshUser;
   next();
 });
+exports.requireRole = (role) => {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+    next();
+  };
+};

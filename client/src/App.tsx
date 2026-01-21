@@ -12,6 +12,7 @@ import CreateListing from "./views/Listing";
 import AllListings from "./views/Listing/components/allListings";
 import ViewListing from "./views/Listing/components/viewListing";
 import SearchPage from "./views/Search";
+import SavedSearches from "./views/SavedSearches";
 
 function App() {
   return (
@@ -39,6 +40,14 @@ function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/listing/:id" element={<ViewListing />} />
         {/* Protected Routes */}
+        <Route
+          path="/saved-searches"
+          element={
+            <ProtectedRoutes>
+              <SavedSearches />
+            </ProtectedRoutes>
+          }
+        />
         <Route
           path="/profile"
           element={

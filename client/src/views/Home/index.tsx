@@ -347,7 +347,7 @@ const Home = () => {
                         >
                           Rs.{" "}
                           {thousandSeparatorNumber(
-                            item?.regularPrice - item?.discountedPrice
+                            (item?.monthlyRent || item?.regularPrice) - item?.discountedPrice
                           )}{" "}
                           {item?.type === "rent" ? "/ month" : ""}
                           <Box>
@@ -520,7 +520,7 @@ const Home = () => {
                           gap: "5px",
                         }}
                       >
-                        Rs. {thousandSeparatorNumber(item?.regularPrice)}{" "}
+                        Rs. {thousandSeparatorNumber(item?.monthlyRent || item?.regularPrice)}{" "}
                         {item?.type === "rent" ? "/ month" : ""}
                         <Box>
                           {item?.type === "rent" ? (
@@ -691,7 +691,7 @@ const Home = () => {
                           gap: "5px",
                         }}
                       >
-                        Rs. {thousandSeparatorNumber(item?.regularPrice)}{" "}
+                        Rs. {thousandSeparatorNumber(item?.monthlyRent || item?.regularPrice)}{" "}
                         {item?.type === "rent" ? "/ month" : ""}
                         <Box>
                           {item?.type === "rent" ? (

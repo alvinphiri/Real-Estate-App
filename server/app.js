@@ -8,7 +8,11 @@ const path = require("path");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
-const listingRouter = require("./routes/listingRoutes");
+const savedSearchRouter = require("./routes/savedSearchRoutes");
+const paymentRouter = require("./routes/paymentRoutes");
+
+const listingRoutes = require("./routes/listingRoutes");
+
 
 const corsOptions = {
   origin: "*",
@@ -31,7 +35,9 @@ app.use((req, res, next) => {
 
 // ROUTES
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/listings", listingRouter);
+app.use("/api/v1/saved-searches", savedSearchRouter);
+app.use("/api/v1/payments", paymentRouter);
+app.use("/api/listings", listingRoutes);
 
 // PRODUCTION SETUP
 if (process.env.NODE_ENV === "production") {

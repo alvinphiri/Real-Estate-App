@@ -1,8 +1,9 @@
 import "react-phone-input-2/lib/material.css";
-import MuiPhoneNumber from "material-ui-phone-number";
+import PhoneInput from "react-phone-input-2";
 import { removeDashAndSpace } from "../../utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FormHelperText } from "@mui/material";
 
 interface PhoneNumberProps {
   value: string;
@@ -67,42 +68,34 @@ const PrimaryPhoneInput = ({
 
   return (
     <>
-      <MuiPhoneNumber
-        sx={{
-          width: "100% !important",
-          background: "#fff",
-          height: "49px",
-          "& .MuiOutlinedInput-root": {
-            height: "49px !important",
-          },
-          "& .MuiFormHelperText-root.Mui-error": {
-            margin: "0",
-          },
-        }}
-        defaultCountry={
-          countryCode ? countryCode.toLowerCase() : defaultCountry || "pk"
+      <PhoneInput
+        country={
+          (countryCode ? countryCode.toLowerCase() : defaultCountry || "pk") as any
         }
-        onChange={(e: any) => {
-          onChange
-            ? onChange(e)
-            : formik?.setFieldValue(name, removeDashAndSpace(e));
-        }}
-        name={name}
         value={value}
-        variant={variant ? variant : "outlined"}
-        label={label}
-        error={formik?.touched[name] && Boolean(formik?.errors[name])}
-        helperText={
-          showErrorMessage ? "" : formik?.touched[name] && formik?.errors[name]
-        }
-        onBlur={formik?.handleBlur}
+        onChange={(val: string) => {
+          const cleaned = removeDashAndSpace(val);
+          onChange ? onChange(cleaned) : formik?.setFieldValue(name, cleaned);
+        }}
+        inputProps={{
+          name,
+          readOnly,
+          disabled,
+          onBlur: formik?.handleBlur,
+        }}
+        specialLabel={label || ""}
         disabled={disabled}
         disableDropdown={loader || disabled}
-        inputProps={{
-          readOnly: readOnly,
-          style: { cursor: readOnly ? "not-allowed" : "" },
-        }}
+        // Keep styling close to the previous MUI input height
+        inputStyle={{ width: "100%", height: "49px" }}
+        containerStyle={{ width: "100%" }}
       />
+
+      {formik?.touched?.[name] && Boolean(formik?.errors?.[name]) && !showErrorMessage ? (
+        <FormHelperText error sx={{ marginLeft: 0 }}>
+          {formik?.errors?.[name]}
+        </FormHelperText>
+      ) : null}
     </>
   );
 };

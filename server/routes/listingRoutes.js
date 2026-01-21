@@ -9,11 +9,31 @@ router.get("/get", listingController.getListings);
 router.get("/listing/:id", listingController.getListing);
 
 // PROTECTED
+
 router.use(authController.protect);
 
-router.post("/", listingController.createListing);
-router.get("/:id", listingController.getUsersListings);
-router.delete("/:id", listingController.deleteListing);
-router.put("/:id", listingController.updateListing);
+// LANDLORD ONLY
+router.post(
+  "/",
+  authController.requireRole("landlord"),
+  listingController.createListing
+);
 
+router.get(
+  "/:id",
+  authController.requireRole("landlord"),
+  listingController.getUsersListings
+);
+
+router.delete(
+  "/:id",
+  authController.requireRole("landlord"),
+  listingController.deleteListing
+);
+
+router.put(
+  "/:id",
+  authController.requireRole("landlord"),
+  listingController.updateListing
+);
 module.exports = router;

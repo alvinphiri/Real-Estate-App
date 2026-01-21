@@ -65,7 +65,7 @@ const ViewListing = () => {
             <Grid item xs={1}></Grid>
             <Grid item xs={7} sx={{ paddingRight: "30px" }}>
               <Heading>{`${data?.data?.name} - Rs.${thousandSeparatorNumber(
-                data?.data?.regularPrice
+                data?.data?.monthlyRent || data?.data?.regularPrice
               )}/`}</Heading>
               <Box
                 sx={{
@@ -135,7 +135,7 @@ const ViewListing = () => {
                     >
                       Now Rs.{" "}
                       {thousandSeparatorNumber(
-                        data?.data?.regularPrice - data?.data?.discountedPrice
+                        (data?.data?.monthlyRent || data?.data?.regularPrice) - data?.data?.discountedPrice
                       )}
                       /
                     </Box>

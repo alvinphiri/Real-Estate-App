@@ -35,3 +35,9 @@ export const selectedUserEmail = (state: RootState) =>
   state.auth?.user?.data?.user?.email;
 export const selectedUserAvatar = (state: RootState) =>
   state.auth?.user?.data?.user?.avatar;
+
+export const selectedUserRole = (state: RootState) =>
+  state.auth?.user?.data?.user?.role;
+
+export const selectedUserPremiumStatus = (state: RootState) =>
+  state.auth?.user?.data?.user?.premiumStatus;

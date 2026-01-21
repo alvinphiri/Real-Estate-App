@@ -47,6 +47,7 @@ interface listingForm {
   phoneNumber: string;
   description: string;
   address: string;
+  location: string;
   regularPrice: number;
   discountedPrice: number;
   bathrooms: number;
@@ -55,6 +56,13 @@ interface listingForm {
   parking: boolean;
   type: string;
   offer: boolean;
+  amenities: {
+    solar: boolean;
+    borehole: boolean;
+    security: boolean;
+    parking: boolean;
+    internet: boolean;
+  };
   files?: null | any[];
 }
 
@@ -68,6 +76,7 @@ const CreateListing = () => {
     phoneNumber: "",
     description: "",
     address: "",
+    location: "",
     regularPrice: 25000,
     discountedPrice: 0,
     bathrooms: 1,
@@ -76,6 +85,13 @@ const CreateListing = () => {
     parking: false,
     offer: false,
     type: "rent",
+    amenities: {
+      solar: false,
+      borehole: false,
+      security: false,
+      parking: false,
+      internet: false,
+    },
     files: [],
   });
   const [listingImages, setListingImages] = useState<any[]>([]);
@@ -160,7 +176,11 @@ const CreateListing = () => {
       name: data.name,
       description: data.description,
       address: data.address,
+      // Backwards compat: server maps regularPrice -> monthlyRent
       regularPrice: data.regularPrice,
+      monthlyRent: data.regularPrice,
+      location: data.location,
+      amenities: data.amenities,
       discountedPrice: data.discountedPrice,
       bathrooms: data.bathrooms,
       bedrooms: data.bedrooms,
@@ -243,7 +263,8 @@ const CreateListing = () => {
         name: listingData?.data?.name,
         description: listingData?.data?.description,
         address: listingData?.data?.address,
-        regularPrice: listingData?.data?.regularPrice,
+        location: listingData?.data?.location || "",
+        regularPrice: listingData?.data?.regularPrice || listingData?.data?.monthlyRent,
         discountedPrice: listingData?.data?.discountedPrice,
         bathrooms: listingData?.data?.bathrooms,
         bedrooms: listingData?.data?.bedrooms,
@@ -252,6 +273,13 @@ const CreateListing = () => {
         type: listingData?.data?.type,
         offer: listingData?.data?.offer,
         phoneNumber: listingData?.data?.phoneNumber,
+        amenities: listingData?.data?.amenities || {
+          solar: false,
+          borehole: false,
+          security: false,
+          parking: false,
+          internet: false,
+        },
       });
       setImageUrls(listingData?.data?.imageUrls);
     }
@@ -400,6 +428,28 @@ const CreateListing = () => {
                               label=""
                             />
                           </Box>
+                        </Box>
+                        <Box sx={{ width: "100%", marginTop: "10px" }}>
+                          <SubHeading sx={{ marginBottom: "5px" }}>
+                            Location / Area
+                          </SubHeading>
+                          <PrimaryInput
+                            type="text"
+                            label=""
+                            name="location"
+                            placeholder="e.g., Avondale"
+                            value={values.location}
+                            helperText={
+                              errors.location && touched.location
+                                ? (errors.location as string)
+                                : ""
+                            }
+                            error={
+                              errors.location && touched.location ? true : false
+                            }
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                          />
                         </Box>
                         <Box
                           sx={{
@@ -587,6 +637,48 @@ const CreateListing = () => {
                               checked={values.offer}
                               onChange={handleChange}
                             />
+                          </Box>
+                          <Box sx={{ marginTop: "10px" }}>
+                            <SubHeading sx={{ marginBottom: "5px" }}>
+                              Amenities
+                            </SubHeading>
+                            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label="Solar"
+                                name="amenities.solar"
+                                checked={values.amenities.solar}
+                                onChange={handleChange}
+                              />
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label="Borehole"
+                                name="amenities.borehole"
+                                checked={values.amenities.borehole}
+                                onChange={handleChange}
+                              />
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label="Security"
+                                name="amenities.security"
+                                checked={values.amenities.security}
+                                onChange={handleChange}
+                              />
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label="Parking"
+                                name="amenities.parking"
+                                checked={values.amenities.parking}
+                                onChange={handleChange}
+                              />
+                              <FormControlLabel
+                                control={<Checkbox />}
+                                label="Internet"
+                                name="amenities.internet"
+                                checked={values.amenities.internet}
+                                onChange={handleChange}
+                              />
+                            </Box>
                           </Box>
                         </Box>
                       </Grid>

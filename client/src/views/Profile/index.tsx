@@ -30,6 +30,7 @@ import { app } from "../../firebase";
 import {
   useDeleteMutation,
   useUpdateMutation,
+  useUpgradePremiumMutation,
 } from "../../redux/api/userApiSlice";
 import {
   selectedUserAvatar,
@@ -37,6 +38,8 @@ import {
   selectedUserEmail,
   setUser,
   selectedUserId,
+  selectedUserPremiumStatus,
+  selectedUserRole,
 } from "../../redux/auth/authSlice";
 // MUI Imports
 import { Box, Grid, Button, Tooltip } from "@mui/material";
@@ -62,6 +65,9 @@ const Profile = () => {
   const userEmail = useTypedSelector(selectedUserEmail);
   const userAvatar = useTypedSelector(selectedUserAvatar);
   const userId = useTypedSelector(selectedUserId);
+  const userRole = useTypedSelector(selectedUserRole);
+  const isPremium = useTypedSelector(selectedUserPremiumStatus);
+  const authBlob = useTypedSelector((state: any) => state.auth?.user);
 
   // states
   const [file, setFile] = useState<File | null>(null);
@@ -145,6 +151,10 @@ const Profile = () => {
   // Update Profile API bind
   const [updateProfile, { isLoading }] = useUpdateMutation();
 
+  // Premium Upgrade API bind
+  const [upgradePremium, { isLoading: upgradeLoading }] =
+    useUpgradePremiumMutation();
+
   const ProfileHandler = async (data: ISProfileForm) => {
     const payload = {
       username: data.userName,
@@ -182,6 +192,47 @@ const Profile = () => {
       setToast({
         ...toast,
         message: "Something went wrong",
+        appearence: true,
+        type: "error",
+      });
+    }
+  };
+
+  const upgradeHandler = async () => {
+    try {
+      const res: any = await upgradePremium({ amount: 0, method: "mock" });
+      if (res?.data?.status === "success") {
+        // Locally flip the flag on the stored auth blob
+        const updatedAuth = {
+          ...authBlob,
+          data: {
+            ...(authBlob?.data || {}),
+            user: {
+              ...(authBlob?.data?.user || {}),
+              premiumStatus: true,
+            },
+          },
+        };
+        dispatch(setUser(updatedAuth));
+        localStorage.setItem("user", JSON.stringify(updatedAuth));
+        setToast({
+          ...toast,
+          message: "Premium activated (mock)",
+          appearence: true,
+          type: "success",
+        });
+      } else if (res?.error) {
+        setToast({
+          ...toast,
+          message: res?.error?.data?.message || "Upgrade failed",
+          appearence: true,
+          type: "error",
+        });
+      }
+    } catch (e) {
+      setToast({
+        ...toast,
+        message: "Upgrade failed",
         appearence: true,
         type: "error",
       });
@@ -283,6 +334,43 @@ const Profile = () => {
                 ""
               )}
             </Box>
+
+            {userRole === "tenant" && (
+              <Box
+                sx={{
+                  width: "100%",
+                  marginTop: "15px",
+                  padding: "10px",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "6px",
+                  background: "#fff",
+                }}
+              >
+                <SubHeading sx={{ marginBottom: "5px" }}>Premium</SubHeading>
+                <Box sx={{ fontSize: "14px", color: "#334155" }}>
+                  Status: {isPremium ? "Active" : "Free"}
+                </Box>
+                {!isPremium && (
+                  <Button
+                    sx={{ marginTop: "10px" }}
+                    variant="contained"
+                    onClick={upgradeHandler}
+                    disabled={upgradeLoading}
+                  >
+                    Activate Premium (Mock)
+                  </Button>
+                )}
+                {isPremium && (
+                  <Button
+                    sx={{ marginTop: "10px" }}
+                    variant="outlined"
+                    onClick={() => navigate("/saved-searches")}
+                  >
+                    Manage Saved Searches
+                  </Button>
+                )}
+              </Box>
+            )}
 
             <Box sx={{ width: "100%" }}>
               <Formik

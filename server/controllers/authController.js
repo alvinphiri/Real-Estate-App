@@ -29,12 +29,14 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
   const newUser = await User.create({
     username,
     email,
     password,
+    // Allow selecting landlord vs tenant at signup (defaults to tenant)
+    ...(role ? { role } : {}),
   });
 
   createSendToken(newUser, 201, res);
@@ -190,4 +192,13 @@ exports.requireRole = (role) => {
     }
     next();
   };
+};
+
+exports.requirePremium = (req, res, next) => {
+  if (!req.user || !req.user.premiumStatus) {
+    return next(
+      new AppError("Premium feature. Please upgrade your account.", 402)
+    );
+  }
+  next();
 };

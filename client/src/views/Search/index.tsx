@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import {
   Box,
   Grid,
+  TextField,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -51,11 +52,11 @@ const sortTypes = [
   },
   {
     name: "Price High to Low",
-    value: "regularPrice_desc",
+    value: "monthlyRent_desc",
   },
   {
     name: "Price Low to High",
-    value: "regularPrice_asc",
+    value: "monthlyRent_asc",
   },
 ];
 
@@ -66,6 +67,14 @@ const SearchPage = () => {
 
   const [sideBarData, setSideBarData] = useState<any>({
     searchTerm: "",
+    location: "",
+    minRent: "",
+    maxRent: "",
+    minBedrooms: "",
+    solar: false,
+    borehole: false,
+    security: false,
+    internet: false,
     type: "all",
     parking: false,
     furnished: false,
@@ -92,6 +101,14 @@ const SearchPage = () => {
     const furnishedFromUrl = urlParams.get("furnished");
     const offerFromUrl = urlParams.get("offer");
     const sortFromUrl = urlParams.get("sort");
+    const locationFromUrl = urlParams.get("location");
+    const minRentFromUrl = urlParams.get("minRent");
+    const maxRentFromUrl = urlParams.get("maxRent");
+    const minBedroomsFromUrl = urlParams.get("minBedrooms");
+    const solarFromUrl = urlParams.get("solar");
+    const boreholeFromUrl = urlParams.get("borehole");
+    const securityFromUrl = urlParams.get("security");
+    const internetFromUrl = urlParams.get("internet");
 
     if (
       searchTermFromUrl ||
@@ -103,6 +120,14 @@ const SearchPage = () => {
     ) {
       setSideBarData({
         searchTerm: searchTermFromUrl || "",
+        location: locationFromUrl || "",
+        minRent: minRentFromUrl || "",
+        maxRent: maxRentFromUrl || "",
+        minBedrooms: minBedroomsFromUrl || "",
+        solar: solarFromUrl === "true",
+        borehole: boreholeFromUrl === "true",
+        security: securityFromUrl === "true",
+        internet: internetFromUrl === "true",
         type: typeFromUrl || "all",
         parking: parkingFromUrl === "true" ? true : false,
         furnished: furnishedFromUrl === "true" ? true : false,
@@ -141,6 +166,14 @@ const SearchPage = () => {
     urlParams.set("furnished", sideBarData.furnished);
     urlParams.set("offer", sideBarData.offer);
     urlParams.set("sort", sideBarData.sort);
+    urlParams.set("location", sideBarData.location);
+    urlParams.set("minRent", sideBarData.minRent);
+    urlParams.set("maxRent", sideBarData.maxRent);
+    urlParams.set("minBedrooms", sideBarData.minBedrooms);
+    urlParams.set("solar", sideBarData.solar);
+    urlParams.set("borehole", sideBarData.borehole);
+    urlParams.set("security", sideBarData.security);
+    urlParams.set("internet", sideBarData.internet);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
@@ -197,6 +230,113 @@ const SearchPage = () => {
                 onChange={handleSearch}
                 color="#fff"
               />
+
+              <Box sx={{ marginTop: "10px" }}>
+                <SubHeading sx={{ marginBottom: "5px" }}>Location / Area</SubHeading>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={sideBarData.location}
+                  onChange={(e) =>
+                    setSideBarData({ ...sideBarData, location: e.target.value })
+                  }
+                  placeholder="e.g., Avondale"
+                />
+              </Box>
+
+              <Box sx={{ marginTop: "10px" }}>
+                <SubHeading sx={{ marginBottom: "5px" }}>Rent Range</SubHeading>
+                <Grid container spacing={1}
+                  sx={{ marginTop: "0px" }}
+                >
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={sideBarData.minRent}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, minRent: e.target.value })
+                      }
+                      placeholder="Min"
+                      type="number"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={sideBarData.maxRent}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, maxRent: e.target.value })
+                      }
+                      placeholder="Max"
+                      type="number"
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ marginTop: "10px" }}>
+                <SubHeading sx={{ marginBottom: "5px" }}>Min Bedrooms</SubHeading>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={sideBarData.minBedrooms}
+                  onChange={(e) =>
+                    setSideBarData({ ...sideBarData, minBedrooms: e.target.value })
+                  }
+                  placeholder="e.g., 2"
+                  type="number"
+                />
+              </Box>
+
+              <Box sx={{ marginTop: "10px" }}>
+                <SubHeading sx={{ marginBottom: "5px" }}>Amenities</SubHeading>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={sideBarData.solar}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, solar: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Solar"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={sideBarData.borehole}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, borehole: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Borehole"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={sideBarData.security}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, security: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Security"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={sideBarData.internet}
+                      onChange={(e) =>
+                        setSideBarData({ ...sideBarData, internet: e.target.checked })
+                      }
+                    />
+                  }
+                  label="Internet"
+                />
+              </Box>
               <Box sx={{ marginTop: "10px" }}>
                 <RadioGroup
                   name="type"
@@ -418,7 +558,7 @@ const SearchPage = () => {
                               gap: "5px",
                             }}
                           >
-                            Rs. {thousandSeparatorNumber(item?.regularPrice)}{" "}
+                            Rs. {thousandSeparatorNumber(item?.monthlyRent || item?.regularPrice)}{" "}
                             {item?.type === "rent" ? "/ month" : ""}
                             <Box>
                               {item?.type === "rent" ? (

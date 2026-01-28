@@ -53,7 +53,6 @@ interface listingForm {
   bathrooms: number;
   bedrooms: number;
   furnished: boolean;
-  parking: boolean;
   type: string;
   offer: boolean;
   amenities: {
@@ -82,7 +81,6 @@ const CreateListing = () => {
     bathrooms: 1,
     bedrooms: 1,
     furnished: false,
-    parking: false,
     offer: false,
     type: "rent",
     amenities: {
@@ -185,7 +183,6 @@ const CreateListing = () => {
       bathrooms: data.bathrooms,
       bedrooms: data.bedrooms,
       furnished: data.furnished,
-      parking: data.parking,
       type: data.type,
       offer: data.offer,
       phoneNumber: data.phoneNumber,
@@ -269,7 +266,6 @@ const CreateListing = () => {
         bathrooms: listingData?.data?.bathrooms,
         bedrooms: listingData?.data?.bedrooms,
         furnished: listingData?.data?.furnished,
-        parking: listingData?.data?.parking,
         type: listingData?.data?.type,
         offer: listingData?.data?.offer,
         phoneNumber: listingData?.data?.phoneNumber,
@@ -616,13 +612,6 @@ const CreateListing = () => {
                               gap: 1,
                             }}
                           >
-                            <FormControlLabel
-                              control={<Checkbox />}
-                              label="Parking Spot"
-                              name="parking"
-                              checked={values.parking}
-                              onChange={handleChange}
-                            />
                             <FormControlLabel
                               control={<Checkbox />}
                               label="Furnished"

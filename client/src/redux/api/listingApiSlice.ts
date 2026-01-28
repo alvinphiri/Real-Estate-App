@@ -52,7 +52,8 @@ export const listingApiSlice = apiSlice.injectEndpoints({
     searchListings: builder.query({
       query: (searchTerm) => {
         return {
-          url: `listings/get/?${searchTerm}`,
+          // Express route is GET /api/v1/listings/get?...
+          url: `listings/get?${searchTerm}`,
           method: "GET",
         };
       },

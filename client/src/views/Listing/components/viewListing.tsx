@@ -164,7 +164,7 @@ const ViewListing = () => {
                 </Box>
                 <Box sx={iconStyle}>
                   <FaParking style={{ color: "#15803d" }} />
-                  {data?.data?.parking ? "Parking" : "No Parking"}
+                  {data?.data?.amenities?.parking ? "Parking" : "No Parking"}
                 </Box>
                 <Box sx={iconStyle}>
                   <FaChair style={{ color: "#15803d" }} />

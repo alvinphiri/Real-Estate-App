@@ -12,6 +12,17 @@ const normalizeListingPayload = (body) => {
   if (payload.regularPrice != null && payload.monthlyRent == null) {
     payload.monthlyRent = payload.regularPrice;
   }
+
+  // Source-of-truth for parking is amenities.parking.
+  // Backwards compat: older UI may send parking as a top-level boolean.
+  if (payload.parking != null) {
+    payload.amenities = payload.amenities || {};
+    if (payload.amenities.parking == null) {
+      payload.amenities.parking = payload.parking;
+    }
+    delete payload.parking;
+  }
+
   // Do not persist discountedPrice if not needed; keep if present.
   return payload;
 };
@@ -234,16 +245,7 @@ exports.getListings = catchAsync(async (req, res, next) => {
     filter.type = req.query.type;
   }
 
-  // 5) Find all listings based on parking true or false
-  if (req.query.parking) {
-    if (req.query.parking === "false") {
-      filter.parking = { $in: [true, false] };
-    } else {
-      filter.parking = req.query.parking;
-    }
-  }
-
-  // 6) Find all listings based on furnished true or false
+  // 5) Find all listings based on furnished true or false
   if (req.query.furnished) {
     if (req.query.furnished === "false") {
       filter.furnished = { $in: [true, false] };
@@ -252,7 +254,7 @@ exports.getListings = catchAsync(async (req, res, next) => {
     }
   }
 
-  // 7) Find all listings based on offer true or false
+  // 6) Find all listings based on offer true or false
   if (req.query.offer) {
     if (req.query.offer === "false") {
       filter.offer = { $in: [true, false] };

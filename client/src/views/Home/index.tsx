@@ -1,6 +1,7 @@
 // MUI Imports
 import { Box, Grid } from "@mui/material";
 // React Imports
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // Custom Imports
 import { Heading, SubHeading } from "../../components/Heading";
@@ -63,6 +64,33 @@ const Home = () => {
   const { data: saleData, isLoading: saleLoading } =
     useSearchListingsQuery(saleString);
 
+  // Never block the whole landing page forever.
+  // If the API is down or DB isn't connected, show the page and allow retry.
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
+
+  useEffect(() => {
+    const anyLoading = offerLoading || rentLoading || saleLoading;
+    if (!anyLoading) {
+      setShowOverlay(false);
+      setTimedOut(false);
+      return;
+    }
+
+    // small delay to avoid flicker
+    const t1 = window.setTimeout(() => setShowOverlay(true), 250);
+    // hard timeout: stop showing overlay and show an error hint
+    const t2 = window.setTimeout(() => {
+      setShowOverlay(false);
+      setTimedOut(true);
+    }, 8000);
+
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [offerLoading, rentLoading, saleLoading]);
+
   return (
     <Box
       sx={{
@@ -72,7 +100,24 @@ const Home = () => {
         },
       }}
     >
-      {(offerLoading || rentLoading || saleLoading) && <OverlayLoader />}
+      {showOverlay && <OverlayLoader />}
+      {timedOut && (
+        <Box sx={{ maxWidth: 900, margin: "10px auto 0", padding: "0 16px" }}>
+          <Box
+            sx={{
+              background: "#fff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "10px",
+              padding: "12px 14px",
+              color: "#334155",
+              fontSize: "14px",
+            }}
+          >
+            Listings are taking too long to load. Make sure the backend is running on
+            <b> localhost:5000</b> and MongoDB is connected, then refresh.
+          </Box>
+        </Box>
+      )}
       <Grid
         container
         spacing={2}

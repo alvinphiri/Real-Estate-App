@@ -37,6 +37,10 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/saved-searches", savedSearchRouter);
 app.use("/api/v1/payments", paymentRouter);
+// Listings routes
+// Primary (matches client + SRS)
+app.use("/api/v1/listings", listingRoutes);
+// Backwards-compatible alias (older code may still call /api/listings)
 app.use("/api/listings", listingRoutes);
 
 // PRODUCTION SETUP

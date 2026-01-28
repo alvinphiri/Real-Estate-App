@@ -32,7 +32,6 @@ export const listingSchema = Yup.object().shape({
     .nullable()
     .positive("Bedrooms must be greater than 0"),
   furnished: Yup.boolean().required("Furnished is required").nullable(),
-  parking: Yup.boolean().required("Parking is required").nullable(),
   type: Yup.string().required("Type is required").nullable(),
   offer: Yup.boolean().required("Offer is required").nullable(),
   files: Yup.array()

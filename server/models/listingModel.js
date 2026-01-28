@@ -57,10 +57,6 @@ const listingSchema = new mongoose.Schema(
       type: Boolean,
       required: [true, "Please provide the furnished status"],
     },
-    parking: {
-      type: Boolean,
-      required: [true, "Please provide the parking status"],
-    },
     type: {
       type: String,
       required: [true, "Please provide the type"],

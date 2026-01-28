@@ -29,18 +29,23 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log("➡️ signup hit");
+  console.log("BODY:", req.body);
+
   const { username, email, password, role } = req.body;
 
   const newUser = await User.create({
     username,
     email,
     password,
-    // Allow selecting landlord vs tenant at signup (defaults to tenant)
     ...(role ? { role } : {}),
   });
 
+  console.log("✅ user created:", newUser._id);
+
   createSendToken(newUser, 201, res);
 });
+
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -202,3 +207,4 @@ exports.requirePremium = (req, res, next) => {
   }
   next();
 };
+
